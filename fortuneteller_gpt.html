@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>나만의 포춘텔러</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Arial", "맑은 고딕", sans-serif;
+      background: radial-gradient(circle at top, #5b2a86, #1b102b 70%);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(190, 120, 255, 0.4);
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 32px;
+      color: #f3d6ff;
+    }
+
+    .subtitle {
+      margin-bottom: 28px;
+      color: #d8c3ff;
+      font-size: 15px;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #f0e5ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2b1742;
+    }
+
+    input:focus {
+      box-shadow: 0 0 12px #d9a7ff;
+    }
+
+    .button-area {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    button {
+      flex: 1;
+      padding: 13px 8px;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #ffffff;
+      background: linear-gradient(135deg, #8e44ad, #c471ed);
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(230, 180, 255, 0.8);
+    }
+
+    .result-box {
+      margin-top: 28px;
+      min-height: 90px;
+      padding: 22px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff7ff;
+      font-size: 18px;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 420px) {
+      .button-area {
+        flex-direction: column;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔮 나만의 포춘텔러</h1>
+    <p class="subtitle">이름과 생년월일을 입력하고 오늘의 운세를 확인해 보세요.</p>
+
+    <div class="input-group">
+      <label for="name">이름</label>
+      <input type="text" id="name" placeholder="이름을 입력하세요">
+    </div>
+
+    <div class="input-group">
+      <label for="birthdate">생년월일</label>
+      <input type="date" id="birthdate">
+    </div>
+
+    <div class="button-area">
+      <button onclick="showTodayFortune()">오늘의 운세</button>
+      <button onclick="showMoneyFortune()">재물운</button>
+      <button onclick="showPersonality()">성향 파악</button>
+    </div>
+
+    <div class="result-box" id="result">
+      결과가 이곳에 나타납니다.
+    </div>
+  </div>
+
+  <script>
+    const todayFortunes = [
+      "🔮 오늘은 작은 선택이 좋은 결과로 이어질 수 있어요.",
+      "🌟 주변 사람의 따뜻한 말 한마디가 힘이 되는 날이에요.",
+      "✨ 새로운 일을 시작하기에 좋은 기운이 느껴져요.",
+      "🌙 조급해하지 않으면 더 좋은 흐름을 만날 수 있어요.",
+      "🍀 예상하지 못한 작은 행운이 찾아올 수 있어요.",
+      "🔮 오늘은 차분하게 계획을 세우면 좋은 하루가 될 거예요.",
+      "🌟 자신감을 가지고 움직이면 좋은 결과가 따라올 수 있어요.",
+      "✨ 평소보다 직감이 잘 맞는 날이에요.",
+      "🌙 잠시 쉬어 가는 시간이 오히려 도움이 될 수 있어요.",
+      "🍀 웃는 얼굴이 좋은 기회를 불러올 수 있어요.",
+      "🔮 고민하던 일에 작은 실마리가 보일 수 있어요.",
+      "🌟 익숙한 일 속에서 새로운 즐거움을 발견할 수 있어요."
+    ];
+
+    const moneyFortunes = [
+      "💰 오늘은 불필요한 지출을 줄이면 만족스러운 하루가 될 거예요.",
+      "🪙 작은 절약이 나중에 큰 도움이 될 수 있어요.",
+      "💎 돈과 관련된 결정은 한 번 더 생각해 보는 것이 좋아요.",
+      "💰 예상하지 못한 곳에서 기분 좋은 이득이 생길 수 있어요.",
+      "🪙 충동구매를 조심하면 재물운이 안정될 수 있어요.",
+      "💎 필요한 곳에 쓰는 돈은 좋은 흐름을 만들 수 있어요.",
+      "💰 오늘은 지갑을 정리하면 재물 기운도 정리될 수 있어요.",
+      "🪙 작은 수입이나 혜택을 발견할 수 있는 날이에요.",
+      "💎 큰 결정보다는 작은 관리가 더 중요한 날이에요.",
+      "💰 계획적인 소비가 행운을 부를 수 있어요.",
+      "🪙 주변의 조언이 금전 관리에 도움이 될 수 있어요.",
+      "💎 아끼는 마음이 좋은 재물운으로 이어질 수 있어요."
+    ];
+
+    const personalities = {
+      1: "🌟 1월에 태어난 당신은 차분하고 책임감이 강한 성향이 있어요.",
+      2: "🌙 2월에 태어난 당신은 감수성이 풍부하고 상상력이 뛰어난 편이에요.",
+      3: "✨ 3월에 태어난 당신은 밝고 호기심이 많아 새로운 것을 좋아해요.",
+      4: "🍀 4월에 태어난 당신은 성실하고 꾸준히 노력하는 힘이 있어요.",
+      5: "🔥 5월에 태어난 당신은 활발하고 사람들과 어울리는 것을 즐겨요.",
+      6: "🌼 6월에 태어난 당신은 다정하고 주변을 잘 챙기는 성향이 있어요.",
+      7: "🌊 7월에 태어난 당신은 생각이 깊고 자신만의 세계가 뚜렷해요.",
+      8: "☀️ 8월에 태어난 당신은 자신감이 있고 목표를 향해 나아가는 힘이 있어요.",
+      9: "🍂 9월에 태어난 당신은 섬세하고 꼼꼼하게 일을 처리하는 편이에요.",
+      10: "🎃 10월에 태어난 당신은 균형감이 좋고 사람들과 조화를 잘 이루어요.",
+      11: "🌌 11월에 태어난 당신은 집중력이 강하고 깊이 있는 매력을 가지고 있어요.",
+      12: "❄️ 12월에 태어난 당신은 따뜻한 마음과 긍정적인 에너지가 돋보여요."
+    };
+
+    const nameInput = document.getElementById("name");
+    const birthdateInput = document.getElementById("birthdate");
+    const resultBox = document.getElementById("result");
+
+    function checkInput() {
+      const name = nameInput.value.trim();
+      const birthdate = birthdateInput.value;
+
+      if (name === "" || birthdate === "") {
+        alert("정보를 입력해 주세요");
+        return false;
+      }
+
+      return true;
+    }
+
+    function getRandomText(list) {
+      const randomIndex = Math.floor(Math.random() * list.length);
+      return list[randomIndex];
+    }
+
+    function showTodayFortune() {
+      if (!checkInput()) {
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const fortune = getRandomText(todayFortunes);
+      resultBox.textContent = name + "님의 오늘의 운세\n" + fortune;
+    }
+
+    function showMoneyFortune() {
+      if (!checkInput()) {
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const fortune = getRandomText(moneyFortunes);
+      resultBox.textContent = name + "님의 재물운\n" + fortune;
+    }
+
+    function showPersonality() {
+      if (!checkInput()) {
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const birthdate = birthdateInput.value;
+      const month = Number(birthdate.split("-")[1]);
+
+      resultBox.textContent = name + "님의 성향 파악\n" + personalities[month];
+    }
+  </script>
+</body>
+</html>
